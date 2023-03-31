@@ -44,11 +44,15 @@ require_once("config.php");
                                     <h5 class="card-title">Registration Form</h5>
 
                                     <!-- Registration Form -->
-                                    <form class="row g-3">
+                                    <form class="row g-3" form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                                    <input type="hidden" name="sname" class="form-control" id="sname" >
+                                    <input type="hidden" name="skevaid" class="form-control" id="skevaid" >
+
+
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" class="form-control" id="kevaID"
+                                                    <input type="text" class="form-control" id="kevaID" name="kevaID"
                                                         placeholder="Keva ID" maxlength="10" onchange="checkKevaID()">
                                                     <label for="kevaID">Keva ID</label>
                                                 </div>
@@ -57,7 +61,7 @@ require_once("config.php");
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" class="form-control" id="fullName"
+                                                    <input type="text" class="form-control" id="fullName" name="fullName"
                                                         placeholder="Full Name" maxlength="30" >
                                                     <label for="fullName">Full Name</label>
                                                 </div>
@@ -66,7 +70,7 @@ require_once("config.php");
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="text" class="form-control" id="username"
+                                                    <input type="text" class="form-control" id="username" name="username"
                                                         placeholder="Username" maxlength="20" onchange="checkUsername()">
                                                     <label for="username">Username</label> 
                                                 </div>
@@ -74,7 +78,7 @@ require_once("config.php");
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="tel" class="form-control" id="mobileNumber"
+                                                    <input type="tel" class="form-control" id="mobileNumber" name="mobileNumber"
                                                         placeholder="Mobile Number" maxlength="10">
                                                     <label for="mobileNumber">Mobile Number</label>
                                                 </div>
@@ -84,7 +88,7 @@ require_once("config.php");
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                <select class="form-select" id="sponsorDropdown" aria-label="Sponsor" onchange="updatePlacementDropdown()">
+                                                <select class="form-select" id="sponsorDropdown" name="sponsorDropdown" aria-label="Sponsor" onchange="updatePlacementDropdown()">
                                                     <option selected disabled>Select Sponsor</option>
                                                     <?php
                                                     // Make the database query
@@ -104,7 +108,7 @@ require_once("config.php");
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                <select class="form-select" id="placement" aria-label="Placement">
+                                                <select class="form-select" id="placement" name ="placement"aria-label="Placement">
                                                     <option selected disabled>Hand Side</option>
                                                 </select>
                                                 <label for="placement">Placement</label>
@@ -115,7 +119,7 @@ require_once("config.php");
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input type="password" class="form-control" id="password"
+                                                    <input type="password" class="form-control" id="password" name="password"
                                                         placeholder="Password">
                                                     <label for="password">Password</label>
                                                 </div>
@@ -123,7 +127,7 @@ require_once("config.php");
                                             <div class="col-md-6">
 
                                         <div class="form-floating">
-                                                <input type="file" class="form-control" id="photo" accept="image/*">
+                                                <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
                                                 <label for="photo">Upload Photo</label>
                                             </div>
                                         </div>
@@ -161,7 +165,7 @@ require_once ("footer.php");
     var sponsorCID = sponsorSelect.options[sponsorSelect.selectedIndex].value;
 
     // Make the database query
-    var query = "SELECT left_member_id, right_member_id FROM usermain WHERE cid = " + sponsorCID;
+    var query = "SELECT kevaid,name,left_member_id, right_member_id FROM usermain WHERE cid = " + sponsorCID;
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
@@ -177,6 +181,8 @@ require_once ("footer.php");
         if (rightMemberID === "") {
           placementSelect.options.add(new Option("Right", "right"));
         }
+      document.getElementById("sname").value = result.name;
+      document.getElementById("skevaid").value = result.kevaid;
       }
     };
     xhr.open("GET", "ajax/query.php?q=" + encodeURIComponent(query));
