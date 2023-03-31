@@ -130,11 +130,11 @@ require_once("navbar.php");
     <!-- End #main -->
 
 
-
-    <?php 
+    <div style="position:fixed;bottom:0;width:100%;">
+      <?php 
 require_once ("footer.php");
 ?>
-
+</div>
 
 </body>
 
