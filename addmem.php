@@ -5,7 +5,9 @@
     <?php
 require_once("navbar.php");
 require_once("config.php");
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 ?>
     <title>Add Member</title>
 
@@ -17,7 +19,128 @@ require_once("config.php");
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
 </head>
+<?php
+require_once("config.php");
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+// Validate kevaID
+if (empty($_POST["kevaID"])) {
+    $kevaIDError = "Please enter your Keva ID.";
+} else {
+    $kevaID = test_input($_POST["kevaID"]);
+    // Check that kevaID is a valid format (e.g. only letters and numbers)
+    if (!preg_match("/^[a-zA-Z0-9]*$/",$kevaID)) {
+        $kevaIDError = "Keva ID can only contain letters and numbers.";
+    }
+}
+
+// Validate fullName
+if (empty($_POST["fullName"])) {
+    $fullNameError = "Please enter your full name.";
+} else {
+    $fullName = test_input($_POST["fullName"]);
+    // Check that fullName only contains letters and spaces
+    if (!preg_match("/^[a-zA-Z ]*$/",$fullName)) {
+        $fullNameError = "Name can only contain letters and spaces.";
+    }
+}
+
+// Validate username
+if (empty($_POST["username"])) {
+    $usernameError = "Please enter a username.";
+} else {
+    $username = test_input($_POST["username"]);
+    // Check that username is a valid format (e.g. only letters and numbers)
+    if (!preg_match("/^[a-zA-Z0-9]*$/",$username)) {
+        $usernameError = "Username can only contain letters and numbers.";
+    }
+}
+
+// Validate mobileNumber
+if (empty($_POST["mobileNumber"])) {
+    $mobileNumberError = "Please enter your mobile number.";
+} else {
+    $mobileNumber = test_input($_POST["mobileNumber"]);
+    // Check that mobileNumber is a valid format (e.g. 10 digits)
+    if (!preg_match("/^[0-9]{10}$/",$mobileNumber)) {
+        $mobileNumberError = "Mobile number must be 10 digits.";
+    }
+}
+
+// Validate sponsorDropdown
+if ($_POST["sponsorDropdown"] == "Select Sponsor") {
+    $sponsorDropdownError = "Please select a sponsor.";
+} else {
+    $sponsorDropdown = test_input($_POST["sponsorDropdown"]);
+}
+
+// Validate placement
+if ($_POST["placement"] == "Hand Side") {
+    $placementError = "Please select a placement.";
+} else {
+    $placement = test_input($_POST["placement"]);
+}
+
+// Validate password
+if (empty($_POST["password"])) {
+    $passwordError = "Please enter a password.";
+} else {
+    $password = test_input($_POST["password"]);
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $sname  = test_input($_POST["sname"]);
+    $skevaid = test_input($_POST["skevaid"]);
+    
+
+}
+
+if ($_FILES["photo"]) {
+    $photo = $_FILES["photo"];
+    $photo_name = $photo['name'];
+    $photo_ext = pathinfo($photo_name, PATHINFO_EXTENSION);
+    $new_photo_name = $kevaID . '.' . $photo_ext;
+    $photo_path = "/keva/photo/" . $new_photo_name;
+    move_uploaded_file($photo["tmp_name"], $_SERVER['DOCUMENT_ROOT'] . $photo_path);
+    $photo = $new_photo_name; // Set $photo to the new filename
+}
+
+
+}
+
+// Helper function to sanitize input data
+function test_input($data) {
+$data = trim($data);
+$data = stripslashes($data);
+$data = htmlspecialchars($data);
+return $data;
+}
+
+if (empty($kevaIDError) && empty($fullNameError) && empty($usernameError) && empty($mobileNumberError) && empty($sponsorDropdownError) && empty($placementError) && empty($passwordError)) {
+  
+    // Insert new record into usermain table
+    $sql = "INSERT INTO usermain (kevaid, pic, name, username, mob, spn_id,spn_id_kevaid,spn_id_name, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($link, $sql);
+    mysqli_stmt_bind_param($stmt, "sssssssss", $kevaID, $photo, $fullName, $username, $mobileNumber, $sponsorDropdown, $skevaid, $sname, $hashed_password);
+    mysqli_stmt_execute($stmt);
+    
+    // Check if the record was successfully inserted
+    if (mysqli_affected_rows($link) == 1) {
+        $ncid = mysqli_insert_id($link);
+        if ($placement == "left") {
+            $sql2 = "update usermain set left_member_keva_id = ? , left_member_id = ? where cid = ? ";
+        }else {
+            $sql2 = "update usermain set right_member_keva_id = ? , right_member_id = ? where cid = ? ";
+        }
+        $stmt2 = mysqli_prepare($link, $sql2);
+        mysqli_stmt_bind_param($stmt2, "sss" , $kevaID , $ncid , $sponsorDropdown);
+        mysqli_stmt_execute($stmt2);
+    } else {
+      echo "Error inserting record: " . mysqli_error($link);
+    }
+    
+  }
+  
+
+?>
 <body>
 
     <!-- <div id="layoutSidenav_content"> -->
@@ -44,7 +167,7 @@ require_once("config.php");
                                     <h5 class="card-title">Registration Form</h5>
 
                                     <!-- Registration Form -->
-                                    <form class="row g-3" form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                                    <form class="row g-3" form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"  enctype="multipart/form-data">
                                     <input type="hidden" name="sname" class="form-control" id="sname" >
                                     <input type="hidden" name="skevaid" class="form-control" id="skevaid" >
 
@@ -56,7 +179,7 @@ require_once("config.php");
                                                         placeholder="Keva ID" maxlength="10" onchange="checkKevaID()">
                                                     <label for="kevaID">Keva ID</label>
                                                 </div>
-                                                <div id="kevaID-error" class="text-danger"></div> 
+                                                <div id="kevaID-error" class="text-danger"><?php echo isset($kevaIDError) ? $kevaIDError : ""; ?></div> 
 
                                             </div>
                                             <div class="col-md-6">
@@ -65,6 +188,7 @@ require_once("config.php");
                                                         placeholder="Full Name" maxlength="30" >
                                                     <label for="fullName">Full Name</label>
                                                 </div>
+                                                <div id="fullName-error" class="text-danger"><?php echo isset($fullNameError) ? $fullNameError : ""; ?></div> 
                                             </div>
                                         </div>
                                         <div class="row mb-3">
@@ -74,7 +198,7 @@ require_once("config.php");
                                                         placeholder="Username" maxlength="20" onchange="checkUsername()">
                                                     <label for="username">Username</label> 
                                                 </div>
-                                                <div id="username-error" class="text-danger"></div> 
+                                                <div id="username-error" class="text-danger"> <?php echo isset($usernameError) ? $usernameError : ""; ?> </div> 
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
@@ -82,6 +206,8 @@ require_once("config.php");
                                                         placeholder="Mobile Number" maxlength="10">
                                                     <label for="mobileNumber">Mobile Number</label>
                                                 </div>
+                                                <div id="mobileNumber-error" class="text-danger"> <?php echo isset($mobileNumberError) ? $mobileNumberError : ""; ?> </div> 
+
                                             </div>
                                         </div>
 
@@ -105,6 +231,8 @@ require_once("config.php");
                                                 </select>
                                                 <label for="sponsorDropdown">Sponsor</label>
                                                 </div>
+                                                <div id="sponsorDropdown-error" class="text-danger"> <?php echo isset($sponsorDropdownError) ? $sponsorDropdownError : ""; ?> </div> 
+
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
@@ -123,11 +251,13 @@ require_once("config.php");
                                                         placeholder="Password">
                                                     <label for="password">Password</label>
                                                 </div>
+                                                <div id="password-error" class="text-danger"> <?php echo isset($passwordError) ? $passwordError : ""; ?> </div> 
+
                                             </div>
                                             <div class="col-md-6">
 
                                         <div class="form-floating">
-                                                <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                                                <input type="file" class="form-control" id="photo" name="photo" accept="image/jpeg">
                                                 <label for="photo">Upload Photo</label>
                                             </div>
                                         </div>
