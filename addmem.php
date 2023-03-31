@@ -4,6 +4,8 @@
 <head>
     <?php
 require_once("navbar.php");
+require_once("config.php");
+
 ?>
     <title>Add Member</title>
 
@@ -79,28 +81,33 @@ require_once("navbar.php");
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <select class="form-select" id="sponsorDropdown"
-                                                        aria-label="Sponsor">
-                                                        <option selected disabled>Select Sponsor</option>
-                                                        <option value="1">Sponsor 1</option>
-                                                        <option value="2">Sponsor 2</option>
-                                                        <option value="3">Sponsor 3</option>
-                                                    </select>
-                                                    <label for="sponsorDropdown">Sponsor</label>
+                                                <select class="form-select" id="sponsorDropdown" aria-label="Sponsor" onchange="updatePlacementDropdown()">
+                                                    <option selected disabled>Select Sponsor</option>
+                                                    <?php
+                                                    // Make the database query
+                                                    $query = "SELECT cid, kevaid, name FROM usermain WHERE left_member_id = '' OR right_member_id = ''";
+                                                    $result = mysqli_query($link, $query);
+
+                                                    // Loop through the query result and generate option tags for each sponsor
+                                                    while ($row = mysqli_fetch_assoc($result)) {
+                                                        $cid = $row['cid'];
+                                                        $name = $row['name'];
+                                                        echo "<option value=\"$cid\">$name</option>";
+                                                    }
+                                                    ?>
+                                                </select>
+                                                <label for="sponsorDropdown">Sponsor</label>
                                                 </div>
                                             </div>
-
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <select class="form-select" id="placement" aria-label="Sponsor">
-                                                        <option selected disabled>Hand Side</option>
-                                                        <option value="1">Right</option>
-                                                        <option value="2">Left</option>
-                                                    </select>
-                                                    <label for="placement">Placement</label>
+                                                <select class="form-select" id="placement" aria-label="Placement">
+                                                    <option selected disabled>Hand Side</option>
+                                                </select>
+                                                <label for="placement">Placement</label>
                                                 </div>
                                             </div>
-                                        </div>
+                                            </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-6">
@@ -135,6 +142,35 @@ require_once("navbar.php");
 require_once ("footer.php");
 ?>
 </div>
+<script>
+  function updatePlacementDropdown() {
+    // Get the selected sponsor CID
+    var sponsorSelect = document.getElementById("sponsorDropdown");
+    var sponsorCID = sponsorSelect.options[sponsorSelect.selectedIndex].value;
+
+    // Make the database query
+    var query = "SELECT left_member_id, right_member_id FROM usermain WHERE cid = " + sponsorCID;
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        // Parse the query result and update the placement dropdown options
+        var result = JSON.parse(xhr.responseText);
+        var leftMemberID = result.left_member_id;
+        var rightMemberID = result.right_member_id;
+        var placementSelect = document.getElementById("placement");
+        placementSelect.options.length = 0; // Clear existing options
+        if (leftMemberID === "") {
+          placementSelect.options.add(new Option("Left", "left"));
+        }
+        if (rightMemberID === "") {
+          placementSelect.options.add(new Option("Right", "right"));
+        }
+      }
+    };
+    xhr.open("GET", "ajax/query.php?q=" + encodeURIComponent(query));
+    xhr.send();
+  }
+</script>
 
 </body>
 
