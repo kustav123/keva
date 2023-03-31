@@ -49,14 +49,16 @@ require_once("config.php");
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="text" class="form-control" id="kevaID"
-                                                        placeholder="Keva ID" maxlength="10">
+                                                        placeholder="Keva ID" maxlength="10" onchange="checkKevaID()">
                                                     <label for="kevaID">Keva ID</label>
                                                 </div>
+                                                <div id="kevaID-error" class="text-danger"></div> 
+
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="text" class="form-control" id="fullName"
-                                                        placeholder="Full Name" maxlength="30">
+                                                        placeholder="Full Name" maxlength="30" >
                                                     <label for="fullName">Full Name</label>
                                                 </div>
                                             </div>
@@ -65,9 +67,10 @@ require_once("config.php");
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="text" class="form-control" id="username"
-                                                        placeholder="Username" maxlength="20">
-                                                    <label for="username">Username</label>
+                                                        placeholder="Username" maxlength="20" onchange="checkUsername()">
+                                                    <label for="username">Username</label> 
                                                 </div>
+                                                <div id="username-error" class="text-danger"></div> 
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
@@ -117,12 +120,21 @@ require_once("config.php");
                                                     <label for="password">Password</label>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+
+                                        <div class="form-floating">
+                                                <input type="file" class="form-control" id="photo" accept="image/*">
+                                                <label for="photo">Upload Photo</label>
+                                            </div>
+                                        </div>
                                         </div>
 
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-primary">Submit</button>
                                             <button type="reset" class="btn btn-secondary">Reset</button>
                                         </div>
+                                        <div class="col-md-6">
+          
                                     </form><!-- End Registration Form -->
 
                                 </div>
@@ -170,7 +182,57 @@ require_once ("footer.php");
     xhr.open("GET", "ajax/query.php?q=" + encodeURIComponent(query));
     xhr.send();
   }
+  </script>
+  
+  <script>
+  function checkUsername() {
+    // Get the username input value
+    var username = document.getElementById("username").value;
+
+    // Make the database query
+    var query = "SELECT COUNT(*) AS count FROM usermain WHERE username = '" + username + "'";
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        // Parse the query result and show an error message if the username already exists
+        var result = JSON.parse(xhr.responseText);
+        var count = result.count;
+        if (count > 0) {
+          document.getElementById("username-error").innerHTML = "This username is already taken.";
+        } else {
+          document.getElementById("username-error").innerHTML = "";
+        }
+      }
+    };
+    xhr.open("GET", "ajax/query.php?q=" + encodeURIComponent(query));
+    xhr.send();
+  }
 </script>
+<script>
+  function checkKevaID() {
+    // Get the kevaID input value
+    var kevaID = document.getElementById("kevaID").value;
+
+    // Make the database query
+    var query = "SELECT COUNT(*) AS count FROM usermain WHERE kevaid = '" + kevaID + "'";
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        // Parse the query result and show an error message if the kevaID already exists
+        var result = JSON.parse(xhr.responseText);
+        var count = result.count;
+        if (count > 0) {
+          document.getElementById("kevaID-error").innerHTML = "This Keva ID is already Added.";
+        } else {
+          document.getElementById("kevaID-error").innerHTML = "";
+        }
+      }
+    };
+    xhr.open("GET", "ajax/query.php?q=" + encodeURIComponent(query));
+    xhr.send();
+  }
+</script>
+
 
 </body>
 

@@ -16,3 +16,4 @@ $row = mysqli_fetch_assoc($result);
 // Return the query result in JSON format
 echo json_encode($row);
 mysqli_close($link);
+?>
