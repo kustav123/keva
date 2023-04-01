@@ -274,6 +274,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     </a>
   </li><!-- End Dashboard Nav -->
 
+  <!-- user manegment menu -->
    <li class="nav-item">
     <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
     <i class="ri-user-line"></i><span>User Management</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -282,6 +283,21 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
       <li>
         <a href="addmem.php">
           <i class="bi bi-circle"></i><span>Add New Members</span>
+        </a>
+      </li>
+      
+    </ul>
+  </li>
+
+  <!-- activity tracking menu -->
+  <li class="nav-item">
+    <a class="nav-link collapsed" data-bs-target="#activity-nav" data-bs-toggle="collapse" href="#">
+    <i class="bi bi-file-earmark-spreadsheet-fill"></i><span>Activity Management</span><i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="activity-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+      <li>
+        <a href="activity.php">
+          <i class="bi bi-circle"></i><span>Add Activity</span>
         </a>
       </li>
       
