@@ -68,18 +68,14 @@ if (empty($_POST["mobileNumber"])) {
 }
 
 // Validate sponsorDropdown
-if ($_POST["sponsorDropdown"] == "Select Sponsor") {
+if (empty($_POST["sponsorDropdown"])) {
     $sponsorDropdownError = "Please select a sponsor.";
 } else {
     $sponsorDropdown = test_input($_POST["sponsorDropdown"]);
-}
-
-// Validate placement
-if ($_POST["placement"] == "Hand Side") {
-    $placementError = "Please select a placement.";
-} else {
     $placement = test_input($_POST["placement"]);
 }
+
+
 
 // Validate password
 if (empty($_POST["password"])) {
@@ -114,7 +110,7 @@ $data = htmlspecialchars($data);
 return $data;
 }
 
-if (empty($kevaIDError) && empty($fullNameError) && empty($usernameError) && empty($mobileNumberError) && empty($sponsorDropdownError) && empty($placementError) && empty($passwordError)) {
+if (empty($kevaIDError) && empty($fullNameError) && empty($usernameError) && empty($mobileNumberError) && empty($sponsorDropdownError) && empty($passwordError)) {
   
     // Insert new record into usermain table
     $sql = "INSERT INTO usermain (kevaid, pic, name, username, mob, spn_id,spn_id_kevaid,spn_id_name, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
