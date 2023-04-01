@@ -158,7 +158,7 @@ if (empty($kevaIDError) && empty($fullNameError) && empty($usernameError) && emp
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-lg-8">
-                            <div class="card">
+                            <div class="card mb-5">
                                 <div class="card-body">
                                     <h5 class="card-title">Registration Form</h5>
 
@@ -284,6 +284,7 @@ if (empty($kevaIDError) && empty($fullNameError) && empty($usernameError) && emp
 require_once ("footer.php");
 ?>
 </div>
+
 <script>
   function updatePlacementDropdown() {
     // Get the selected sponsor CID
