@@ -98,27 +98,27 @@ require_once("navbar.php");
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Keva ID</div>
-                    <div class="col-lg-9 col-md-8">Web Designer</div>
+                    <div class="col-lg-9 col-md-8"><?php echo  $_SESSION["kevaid"] ?></div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Left Team</div>
-                    <div class="col-lg-9 col-md-8">USA</div>
+                    <div class="col-lg-9 col-md-8"><?php echo  $_SESSION["l_name"] ?></div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Right Team</div>
-                    <div class="col-lg-9 col-md-8">A108 Adam Street, New York, NY 535022</div>
+                    <div class="col-lg-9 col-md-8"><?php echo  $_SESSION["r_name"] ?></div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Sponsore</div>
-                    <div class="col-lg-9 col-md-8">(436) 486-3538 x29071</div>
+                    <div class="col-lg-9 col-md-8"><?php echo  $_SESSION["spn_id_name"] ?></div>
                   </div>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Email</div>
-                    <div class="col-lg-9 col-md-8">k.anderson@example.com</div>
+                    <div class="col-lg-3 col-md-4 label">DOB</div>
+                    <div class="col-lg-9 col-md-8"><?php echo  $_SESSION["dob"] ?></div>
                   </div>
 
                 </div>
