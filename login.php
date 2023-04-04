@@ -57,7 +57,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
         $sql = "SELECT dob,spn_id_name,l_name,r_name,kevaid,role,name ,cid, pic,username, mob, password FROM usermain WHERE username = ? and status = 1";
-        
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "s", $param_username);

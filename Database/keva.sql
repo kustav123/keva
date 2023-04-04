@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Mar 31, 2023 at 06:54 AM
+-- Generation Time: Apr 04, 2023 at 10:04 AM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `usermain` (
   `l_name` int NOT NULL,
   `r_name` int NOT NULL,
   `status` varchar(1) NOT NULL DEFAULT '1',
+  `dob` date NOT NULL,
   PRIMARY KEY (`cid`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -108,8 +109,8 @@ CREATE TABLE IF NOT EXISTS `usermain` (
 -- Dumping data for table `usermain`
 --
 
-INSERT INTO `usermain` (`cid`, `kevaid`, `name`, `username`, `pic`, `mob`, `spn_id`, `spn_id_kevaid`, `spn_id_name`, `left_member_id`, `right_member_id`, `left_member_keva_id`, `right_member_keva_id`, `password`, `role`, `l_name`, `r_name`, `status`) VALUES
-(1000, 'keva001', 'Pritam Kundu', 'pritam1000', '', '8436548535', '0', '0', '0', '', '', '', '', '$2y$10$.r6MdrTV.pjpNa1oWpepuOVoRFkrQTKXvMLWrtxXOtWiZzQpx4Oae', '1', 0, 0, '1');
+INSERT INTO `usermain` (`cid`, `kevaid`, `name`, `username`, `pic`, `mob`, `spn_id`, `spn_id_kevaid`, `spn_id_name`, `left_member_id`, `right_member_id`, `left_member_keva_id`, `right_member_keva_id`, `password`, `role`, `l_name`, `r_name`, `status`, `dob`) VALUES
+(1000, 'keva001', 'Pritam Kundu', '6800562', '6800562.jpg', '8436548535', '0', '0', '0', '', '', '', '', '$2y$10$.r6MdrTV.pjpNa1oWpepuOVoRFkrQTKXvMLWrtxXOtWiZzQpx4Oae', '1', 0, 0, '1', '2023-04-10');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
