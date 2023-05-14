@@ -56,7 +56,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT dob,spn_id_name,l_name,r_name,kevaid,role,name ,cid, pic,username, mob, password FROM usermain WHERE username = ? and status = 1";
+        $sql = "SELECT dob,gender,spn_id_name,l_name,r_name,kevaid,role,name ,cid, pic,username, mob, password FROM usermain WHERE username = ? and status = 1";
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "s", $param_username);
@@ -72,7 +72,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Check if username exists, if yes then verify password
                 if(mysqli_stmt_num_rows($stmt) == 1){                    
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $dob,$spn_id_name,$l_name,$r_name,$kevaid,$role, $name,$id, $pic,$username, $mob,$hashed_password);
+                    mysqli_stmt_bind_result($stmt, $gender,$dob,$spn_id_name,$l_name,$r_name,$kevaid,$role, $name,$id, $pic,$username, $mob,$hashed_password);
                     if(mysqli_stmt_fetch($stmt)){
                         if(password_verify($password, $hashed_password)&& $role == 1){
                             // Password is correct, so start a new session
@@ -88,9 +88,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION["pic"] = $pic;
                             $_SESSION["kevaid"] = $kevaid;
                             $_SESSION["l_name"] = $l_name;
-                            $_SESSION["R_name"] = $r_name;
+                            $_SESSION["r_name"] = $r_name;
                             $_SESSION["spn_id_name"] = $spn_id_name;
                             $_SESSION["dob"] = $dob;
+                            $_SESSION["gender"] = $gender;
+
 
 
 

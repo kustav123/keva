@@ -40,7 +40,7 @@ require_once("navbar.php");
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-              <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+              <img src="photo/<?php echo $_SESSION["pic"] ?>" alt="Profile" class="rounded-circle">
               <h2><?php echo  $_SESSION["name"] ?></h2>
               <h3><?php echo  $_SESSION["mob"] ?></h3>
               <!-- <div class="social-links mt-2">
@@ -120,6 +120,10 @@ require_once("navbar.php");
                     <div class="col-lg-3 col-md-4 label">DOB</div>
                     <div class="col-lg-9 col-md-8"><?php echo  $_SESSION["dob"] ?></div>
                   </div>
+                  <div class="Gender">
+                    <div class="col-lg-3 col-md-4 label">Gender</div>
+                    <div class="col-lg-9 col-md-8"><?php echo  $_SESSION["dob"] ?></div>
+                  </div>
 
                 </div>
 
@@ -130,7 +134,7 @@ require_once("navbar.php");
                     <div class="row mb-3">
                       <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9">
-                        <img src="assets/img/profile-img.jpg" alt="Profile">
+                        <img src="photo/<?php echo $_SESSION["pic"] ?>" alt="Profile">
                         <div class="pt-2">
                           <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
                           <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>

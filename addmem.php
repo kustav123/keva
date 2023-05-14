@@ -22,6 +22,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
   ======================================================== -->
 </head>
 <?php
+
 function test_input($data) {
     $data = trim($data);
     $data = stripslashes($data);
@@ -91,14 +92,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $sname  = test_input($_POST["sname"]);
         $skevaid = test_input($_POST["skevaid"]);
-        
+        $gender = $_POST["gender"] ;
 
     }
 
     if ($_FILES["photo"]) {
         $photo = $_FILES["photo"];
         if ($photo["error"] == 4) {
+            if ($gender == "Male") {
             $photo = "default.jpg"; // Set default filename
+            }else {
+            $photo = "default_f.jpg"; // Set default filename
+            }
         } else {
             $photo_name = $photo['name'];
             $photo_ext = pathinfo($photo_name, PATHINFO_EXTENSION);
@@ -115,11 +120,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 if (empty($kevaIDError) && empty($fullNameError) && empty($usernameError) && empty($mobileNumberError) && empty($sponsorDropdownError) && empty($passwordError)) {
   
     // Insert new record into usermain table
-    $sql = "INSERT INTO usermain (kevaid, pic, name, dob,username, mob, spn_id,spn_id_kevaid,spn_id_name, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO usermain (kevaid, pic, name, gender, dob,username, mob, spn_id,spn_id_kevaid,spn_id_name, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($link, $sql);
-    mysqli_stmt_bind_param($stmt, "ssssssssss", $kevaID, $photo, $fullName, $dob,$kevaID, $mobileNumber, $sponsorDropdown, $skevaid, $sname, $hashed_password);
+    mysqli_stmt_bind_param($stmt, "sssssssssss", $kevaID, $photo, $fullName,$gender, $dob,$kevaID, $mobileNumber, $sponsorDropdown, $skevaid, $sname, $hashed_password);
     mysqli_stmt_execute($stmt);
-    echo "efefev" ;
     // Check if the record was successfully inserted
    if (mysqli_affected_rows($link) == 1) {
         $ncid = mysqli_insert_id($link);
@@ -194,7 +198,7 @@ if (empty($kevaIDError) && empty($fullNameError) && empty($usernameError) && emp
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-floating">
                                                     <input type="date" class="form-control" id="dob" name="dob"
                                                         placeholder="Date of Birth">
@@ -202,7 +206,7 @@ if (empty($kevaIDError) && empty($fullNameError) && empty($usernameError) && emp
                                                 </div>
                                                 <div id="dob-error" class="text-danger"> <?php echo isset($dobError) ? $dobError : ""; ?> </div> 
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-floating">
                                                     <input type="tel" class="form-control" id="mobileNumber" name="mobileNumber"
                                                         placeholder="Mobile Number" maxlength="10">
@@ -211,6 +215,15 @@ if (empty($kevaIDError) && empty($fullNameError) && empty($usernameError) && emp
                                                 <div id="mobileNumber-error" class="text-danger"> <?php echo isset($mobileNumberError) ? $mobileNumberError : ""; ?> </div> 
 
                                             </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating">
+                                                    <select class="form-select" id="gender" name="gender" aria-label="Gender">
+                                                        <option value="Male">Male</option>
+                                                        <option value="Female">Female</option>
+                                                    </select>
+                                                    <label for="gender">Gender</label>
+                                                </div>
+                                        </div>
                                         </div>
 
                                         <div class="row mb-3">
@@ -220,7 +233,7 @@ if (empty($kevaIDError) && empty($fullNameError) && empty($usernameError) && emp
                                                     <option selected disabled>Select Sponsor</option>
                                                     <?php
                                                     // Make the database query
-                                                    $query = "SELECT cid, kevaid, name FROM usermain WHERE left_member_id = '' OR right_member_id = ''";
+                                                    $query = "SELECT cid, kevaid, name FROM usermain WHERE left_member_id is NULL OR right_member_id is NULL ";
                                                     $result = mysqli_query($link, $query);
 
                                                     // Loop through the query result and generate option tags for each sponsor
@@ -308,10 +321,10 @@ require_once ("footer.php");
         var rightMemberID = result.right_member_id;
         var placementSelect = document.getElementById("placement");
         placementSelect.options.length = 0; // Clear existing options
-        if (leftMemberID === "") {
+        if (leftMemberID === null) {
           placementSelect.options.add(new Option("Left", "left"));
         }
-        if (rightMemberID === "") {
+        if (rightMemberID === null) {
           placementSelect.options.add(new Option("Right", "right"));
         }
       document.getElementById("sname").value = result.name;

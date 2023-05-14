@@ -2,18 +2,18 @@
 // initialize the database connection
 require_once('config.php');
 
-$id = 10;
+$id = 1000;
 
 function fetchMembers($link, $id, &$left, &$right) {
     // select the left and right member IDs where sponsor_id = $id
-    $sql = "SELECT left_member_id, right_member_id FROM user WHERE id = $id"; 
+    $sql = "SELECT left_member_id, right_member_id FROM usermain WHERE cid = $id"; 
     $result = mysqli_query($link, $sql);
 
     // store the left and right member IDs in arrays and variables
     $left = array();
     $right = array();
     $cl = array();
-
+    echo $right ;
     $row = mysqli_fetch_assoc($result);
     $left[]  = $row['left_member_id'];
     $right[] = $row['right_member_id'];
@@ -23,8 +23,8 @@ function fetchMembers($link, $id, &$left, &$right) {
     while (!empty($a)) {
         $id_list = implode(',', $a);
 
-        $sql = "SELECT left_member_id FROM user WHERE id IN ($id_list)";  
-        $sqlr = "SELECT right_member_id FROM user WHERE id IN ($id_list)"; 
+        $sql = "SELECT left_member_id FROM usermain WHERE cid IN ($id_list)";  
+        $sqlr = "SELECT right_member_id FROM usermain WHERE cid IN ($id_list)"; 
         $result = mysqli_query($link, $sql);
         $resultr = mysqli_query($link, $sqlr);
 
@@ -55,8 +55,8 @@ function fetchMembers($link, $id, &$left, &$right) {
     while (!empty($a)) {
         $id_list = implode(',', $a);
 
-        $sql = "SELECT left_member_id FROM user WHERE id IN ($id_list)";
-        $sqlr = "SELECT right_member_id FROM user WHERE id IN ($id_list)";
+        $sql = "SELECT left_member_id FROM usermain WHERE cid IN ($id_list)";
+        $sqlr = "SELECT right_member_id FROM usermain WHERE cid IN ($id_list)";
         $result = mysqli_query($link, $sql);
         $resultr = mysqli_query($link, $sqlr);
 
